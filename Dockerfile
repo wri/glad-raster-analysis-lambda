@@ -1,6 +1,5 @@
-FROM lambdalinux/baseimage-amzn:2017.03-004
+FROM remotepixel/amazonlinux-gdal:2.4.0-light
 
-RUN yum install python27-devel gcc python27-pip zip
 COPY . /build
 WORKDIR /build
 

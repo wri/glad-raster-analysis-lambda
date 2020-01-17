@@ -13,8 +13,8 @@ mkdir dist -p
 rm -f dist/raster-ops-deploy.zip
 
 pushd . > /dev/null
-cd /usr/local/lib64/python2.7/site-packages
-cp -r /usr/local/lib/python2.7/site-packages/* .
+cd /usr/local/lib64/python3.6/site-packages
+cp -r /usr/local/lib/python3.6/site-packages/* .
 
 # Delete the duplicated geos file and symlink it to the existing .so
 rm shapely/.libs/libgeos-3-fc05f4c1.5.0.so
