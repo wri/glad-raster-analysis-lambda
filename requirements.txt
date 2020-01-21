@@ -1,5 +1,5 @@
-rasterio[s3]==1.0a8
+rasterio[s3]==1.0.1
 shapely==1.6b4
-pyproj==1.9.5
+pyproj==1.9.6
 nose==1.3.7
 Flask==1.0.2

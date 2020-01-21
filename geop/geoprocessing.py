@@ -1,7 +1,8 @@
+from __future__ import absolute_import
 import numpy as np
 from shapely.geometry import shape, Polygon
 
-from geo_utils import mask_geom_on_raster
+from .geo_utils import mask_geom_on_raster
 
 
 def count(geom, raster_path):
