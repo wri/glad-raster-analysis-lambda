@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 import json
 import datetime
 from collections import defaultdict
@@ -9,7 +10,7 @@ from shapely.geometry import shape
 from shapely.ops import transform
 from flask import request
 
-from errors import Error
+from .errors import Error
 
 
 def get_shapely_geom():
@@ -41,7 +42,7 @@ def create_resp_dict(date_dict):
                  'month':  grouped_and_to_rows([(x.year, x.month) for x in k], v, 'month'),
                  'week': grouped_and_to_rows([(x.year, x.isocalendar()[1]) for x in k], v, 'week'),
                  'day': grouped_and_to_rows([(x.year, x.strftime('%Y-%m-%d')) for x in k], v, 'day'),
-                 'total': sum(v)
+                 'total': int(sum(v))
                 }
 
     return resp_dict
@@ -58,7 +59,7 @@ def unpack_glad_histogram(stats, params):
 
     date_dict = {}
 
-    for conf_days, count in stats.iteritems():
+    for conf_days, count in stats.items():
 
         alert_date, conf = glad_val_to_date_conf(conf_days)
 
@@ -72,7 +73,7 @@ def unpack_glad_histogram(stats, params):
 
     # filter dates by period
     start_date, end_date = period_to_dates(period)
-    filtered_by_period = {alert_date : count for alert_date, count in date_dict.iteritems() if start_date <= alert_date <= end_date}
+    filtered_by_period = {alert_date : count for alert_date, count in date_dict.items() if start_date <= alert_date <= end_date}
 
     resp_dict = create_resp_dict(filtered_by_period)
 
@@ -98,7 +99,7 @@ def glad_val_to_date_conf(glad_val):
     glad_str = str(glad_val)
 
     total_days = int(glad_str[1:])
-    year = total_days / 365 + 2015
+    year = int(total_days / 365 + 2015)
     julian_day = total_days % 365
 
     conf = int(glad_str[0]) 
@@ -110,7 +111,6 @@ def glad_val_to_date_conf(glad_val):
 
 
 def grouped_and_to_rows(keys, vals, agg_type):
-
     # source: https://jakevdp.github.io/blog/2017/03/22/group-by-from-scratch/
     count = defaultdict(int)
     for key, val in zip(keys, vals):
@@ -119,10 +119,9 @@ def grouped_and_to_rows(keys, vals, agg_type):
 
     final_list = []
 
-    for key, val in grouped.iteritems():
-
+    for key, val in grouped.items():
         if agg_type == 'year':
-	    row = {agg_type: key}
+            row = {agg_type: key}
         else:
             row = {'year': key[0], agg_type: key[1]}
     
@@ -130,10 +129,11 @@ def grouped_and_to_rows(keys, vals, agg_type):
         if agg_type == 'day':
             row['alert_date'] = row['day']
 
-        row['count'] = val
+        row['count'] = int(val)
         final_list.append(row)
 
     return final_list
+
 
 def set_default_period():
     today = datetime.datetime.now().date()
