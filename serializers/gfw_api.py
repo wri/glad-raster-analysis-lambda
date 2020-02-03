@@ -35,7 +35,7 @@ def write_to_s3(rows, out_format):
 
     # create out CSV text string
     if out_format == 'csv':
-        out_csv = io.BytesIO()
+        out_csv = io.StringIO()
         writer = csv.writer(out_csv)
 
         writer.writerow(['longitude', 'latitude', 'year', 'julian_day', 'confidence'])

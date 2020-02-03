@@ -12,17 +12,11 @@ mkdir dist -p
 # apparently zip just adds to raster-ops-deploy if it already exists?
 rm -f dist/raster-ops-deploy.zip
 
-pushd . > /dev/null
-cd /usr/local/lib64/python3.6/site-packages
-cp -r /usr/local/lib/python3.6/site-packages/* .
+cd /var/task
+zip -9qyr /home/geolambda/dist/raster-ops-deploy.zip lib/*.so* share
 
-# Delete the duplicated geos file and symlink it to the existing .so
-rm shapely/.libs/libgeos-3-fc05f4c1.5.0.so
-ln -s ../../rasterio/.libs/libgeos-3-fc05f4c1.5.0.so shapely/.libs/libgeos-3-fc05f4c1.5.0.so
-
-# Zip the code and dependencies, ignoring things we know to exist on
-# the lambda runtime already.  Set to not resolve symlinks
-zip -9 -rqy ../../../../../home/geolambda/dist/raster-ops-deploy.zip * \
+cd /var/lang/lib/python3.6/site-packages
+zip -9qyr /home/geolambda/dist/raster-ops-deploy.zip . \
     -x \*-info\* \
     -x boto\*\* \
     -x pip\* \
@@ -32,7 +26,8 @@ zip -9 -rqy ../../../../../home/geolambda/dist/raster-ops-deploy.zip * \
     -x jmespath\* \
     -x pkg_resources\* \
 
-popd  > /dev/null
+
+cd /home/geolambda
 zip -9 -rq dist/raster-ops-deploy.zip geop/* data/* serializers/* utilities/* api.py wsgi.py
 
 # Deploy the function
